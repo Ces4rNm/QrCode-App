@@ -1,20 +1,75 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-title>
-      Blank
+      Ionic QR Scanner
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-text>
+    <ul>
+      <li>El escaner usa la libreria
+        <a href="https://github.com/cozmo/jsQR">jsQR</a>
+      </li>
+      <li>El generador usa la libreria
+        <a href="https://www.npmjs.com/package/@techiediaries/ngx-qrcode">ngx-qrcode</a>
+      </li>
+      <li>El guardar usa la libreria nativa
+        <a href="https://capacitorjs.com/docs/apis/filesystem">filesystem</a>
+      </li>
+    </ul>
+  </ion-text>
+  <ion-button (click)="startScan()" color="primary" expand="full">
+    <ion-icon name="scan-outline" slot="start"></ion-icon>
+    Start Scan
+  </ion-button>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-button (click)="resetScan()" *ngIf="scanResult" color="warning" expand="full">
+    <ion-icon name="refresh" slot="start"></ion-icon>
+    Reset
+  </ion-button>
+
+  <video #video [hidden]="!scanActive" width="100%"></video>
+  <canvas #canvas hidden></canvas>
+
+  <ion-button (click)="stopScan()" *ngIf="scanActive" color="danger" expand="full">
+    <ion-icon name="close" slot="start"></ion-icon>
+    Reset
+  </ion-button>
+
+  <ion-card *ngIf="scanResult">
+    <ion-card-header>
+      <ion-title>
+        QR Code
+      </ion-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{scanResult}}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+
+    <ion-item>
+      <ion-input [(ngModel)]="qrData" type="text" maxlength="1000" placeholder="Write data to QR"></ion-input>
+    </ion-item>
+    <ion-button (click)="createCode=qrData;" color="success" expand="full">
+      <ion-icon name="qr-code-outline" slot="start"></ion-icon>
+      Generate QR
+    </ion-button>
+
+    <ngx-qrcode *ngIf="createCode" [value]="createCode" cssClass="qr-code-img ion-text-center"></ngx-qrcode>
+
+    <ion-card-content>
+      {{createCode}}
+    </ion-card-content>
+
+    <ion-button (click)="shareImage()" color="tertiary" expand="full">
+      <ion-icon name="download" slot="start"></ion-icon>
+      Save QR
+    </ion-button>
+
+  </ion-card>
+
 </ion-content>
